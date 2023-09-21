@@ -2,14 +2,26 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { SingIn } from '../../pages/sign-in'
 import { SignUp } from '../../pages/sign-up'
 import { Patient } from '../../pages/patient'
+import { AuthProvider } from '../../contexts/auth-context'
+import { PrivateRoute } from './private-route'
+
 export function Router() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<SingIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/paciente" element={<Patient />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<SingIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route
+            path="/paciente"
+            element={
+              <PrivateRoute>
+                <Patient />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   )
 }
