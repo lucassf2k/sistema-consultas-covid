@@ -1,7 +1,19 @@
 import { ReactNode, createContext } from 'react'
 import { useAuth } from './hooks/use-auth'
 
-const defaultValue = {}
+type DefaultValueType = {
+  authenticated: boolean
+  handleLogin: ({
+    email,
+    password,
+  }: {
+    email: string
+    password: string
+  }) => Promise<void>
+  handleLogout: () => void
+  isLoading: boolean
+}
+const defaultValue = {} as DefaultValueType
 const Context = createContext(defaultValue)
 type AuthProviderProps = {
   children: ReactNode

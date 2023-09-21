@@ -45,7 +45,7 @@ export function useAuth() {
 
       setAuthenticated(true)
 
-      navigate('/home')
+      navigate('/paciente')
     } catch (err) {
       alert('E-mail ou senha incorretas')
       console.log(err)
