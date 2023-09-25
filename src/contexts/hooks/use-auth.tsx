@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { api } from '../../services/api'
+import { User } from '../../models/user'
+import { toast } from 'react-toastify'
 
 export function useAuth() {
   const [authenticated, setAuthenticated] = useState(false)
@@ -32,22 +34,21 @@ export function useAuth() {
         email,
         senha: password,
       })
-
       const authorization = headers.authorization
-
       const [, token] = authorization.split(' ')
-
       if (!token) return
-
       localStorage.setItem('@token', JSON.stringify(token))
       localStorage.setItem('@email', email)
       api.defaults.headers.Authorization = `Bearer ${token}`
-
       setAuthenticated(true)
-
-      navigate('/paciente')
+      const user: User = await api.get(`/user/email/${email}`)
+      if (user.crm) {
+        navigate('/medico')
+      } else {
+        navigate('/paciente')
+      }
     } catch (err) {
-      alert('E-mail ou senha incorretas')
+      toast.error('Alguma coisa deu errada! Tente mais tarde')
       console.log(err)
     }
   }
@@ -57,7 +58,7 @@ export function useAuth() {
     localStorage.removeItem('@token')
     localStorage.removeItem('@email')
     api.defaults.headers.Authorization = null
-    navigate('/signin')
+    navigate('/')
   }
 
   return { isLoading, authenticated, handleLogin, handleLogout }

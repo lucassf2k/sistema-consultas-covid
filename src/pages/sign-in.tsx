@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import covidBG from '../assets/covid-bg.jpg'
 import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 import { Context } from '../contexts/auth-context'
+import { toast } from 'react-toastify'
 
 export function SingIn() {
   const { handleLogin } = useContext(Context)
@@ -13,7 +14,7 @@ export function SingIn() {
   const handleSignIn = (event: FormEvent) => {
     event.preventDefault()
     if (!email || !pass) {
-      alert('E-mail ou senha faltando')
+      toast.info('A senha ou email não pode ser vázio!')
       return
     }
 
@@ -46,7 +47,9 @@ export function SingIn() {
                 clique aqui
               </Link>
             </span>
-            <Form.Button onClick={handleSignIn}>Logar</Form.Button>
+            <Form.Button type="submit" onClick={handleSignIn}>
+              Logar
+            </Form.Button>
           </Form.Root>
         </main>
       </section>
