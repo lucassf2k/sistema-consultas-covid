@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { api } from '../../services/api'
-import { User } from '../../models/user'
 import { toast } from 'react-toastify'
 
 export function useAuth() {
@@ -41,14 +40,14 @@ export function useAuth() {
       localStorage.setItem('@email', email)
       api.defaults.headers.Authorization = `Bearer ${token}`
       setAuthenticated(true)
-      const user: User = await api.get(`/user/email/${email}`)
+      const { data: user } = await api.get(`/user/email/${email}`)
       if (user.crm) {
         navigate('/medico')
       } else {
         navigate('/paciente')
       }
     } catch (err) {
-      toast.error('Alguma coisa deu errada! Tente mais tarde')
+      toast.warning('E-mail ou senha incorretos! Tente novamente')
       console.log(err)
     }
   }

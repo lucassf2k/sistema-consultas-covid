@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { SingIn } from '../../pages/sign-in'
 import { SignUp } from '../../pages/sign-up'
 import { Patient } from '../../pages/patient'
+import { Doctor } from '../../pages/doctor'
 import { AuthProvider } from '../../contexts/auth-context'
 import { PrivateRoute } from './private-route'
 
@@ -17,6 +18,14 @@ export function Router() {
             element={
               <PrivateRoute>
                 <Patient />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/medico"
+            element={
+              <PrivateRoute>
+                <Doctor />
               </PrivateRoute>
             }
           />

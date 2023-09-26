@@ -1,13 +1,13 @@
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+
 import { Form } from '../components/form'
 import { Title } from '../components/title'
-
 import covidBG from '../assets/covid-bg.jpg'
 import { User } from '../models/user'
 import { api } from '../services/api'
 import { Icons } from '../assets/icons'
-import { toast } from 'react-toastify'
 
 export function SignUp() {
   const [email, setEmail] = useState('')
@@ -36,7 +36,13 @@ export function SignUp() {
         nascimento,
       }
       console.log('user', user)
-      await api.post('/user', user)
+      await api.post('/user', {
+        email: user.email,
+        senha: user.senha,
+        nome: user.cpf,
+        crm: user.crm,
+        nascimento: user.nascimento,
+      })
       toast.success('Cadastrado com sucesso!')
       navigate('/')
     } catch (err) {
@@ -74,6 +80,7 @@ export function SignUp() {
             <Form.Input
               type="text"
               placeholder="CPF"
+              value={cpf}
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setCpf(event.target.value)
               }

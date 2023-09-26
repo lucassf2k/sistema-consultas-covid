@@ -17,7 +17,10 @@ export function SingIn() {
       toast.info('A senha ou email não pode ser vázio!')
       return
     }
-
+    if (pass.length < 6) {
+      toast.info('Senha deve ter no mínimo 6 caracteres')
+      return
+    }
     handleLogin({ email, password: pass })
   }
 
