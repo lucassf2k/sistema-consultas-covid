@@ -8,6 +8,7 @@ import covidBG from '../assets/covid-bg.jpg'
 import { User } from '../models/user'
 import { api } from '../services/api'
 import { Icons } from '../assets/icons'
+import { transformarFormatoData } from '../services/formated-date'
 
 export function SignUp() {
   const [email, setEmail] = useState('')
@@ -35,13 +36,14 @@ export function SignUp() {
         crm: crm ? crm : '',
         nascimento,
       }
-      console.log('user', user)
+      const dateFormated = transformarFormatoData(user.nascimento)
       await api.post('/user', {
         email: user.email,
         senha: user.senha,
-        nome: user.cpf,
+        nome: user.nome,
+        cpf: user.cpf,
         crm: user.crm,
-        nascimento: user.nascimento,
+        nascimento: dateFormated,
       })
       toast.success('Cadastrado com sucesso!')
       navigate('/')
