@@ -6,10 +6,11 @@ type TableProps = {
 
 export const Table = ({ text, isDoctor }:TableProps) => {
   return (
-    <div className="flex flex-wrap">
+    <div className="">
+      <div className="flex my-8 items-center">    
       {text && (
         <div
-          className="text-container"
+          className="text-container m-auto"
           style={{
             width: '533px',
             height: '60px',
@@ -17,12 +18,15 @@ export const Table = ({ text, isDoctor }:TableProps) => {
             left: '142px',
           }}
         >
-          {text}
+          <span className="font-poppins text-3xl font-semibold leading-15 tracking-normal text-left text-blue-500">
+  {text}
+</span>
+     
         </div>
       )}
-      {isDoctor ?null : (
+      {isDoctor ?(
         <button
-          className="button bg-blue-500 text-white rounded-lg ml-4"
+          className="button bg-blue-500 text-white rounded-lg ml-4 m-auto"
           style={{
             width: '417px',
             height: '70px',
@@ -34,35 +38,42 @@ export const Table = ({ text, isDoctor }:TableProps) => {
             Realizar Atendimento
           </span>
         </button>
-      )}
-
-    <div className="table-container">
-      <table className="w-3/4 h-96 mx-auto rounded-lg border border-blue-500">
-        <thead>
-        <tr>
-            <td className="px-4 py-2">Editar</td>
-            <td className="px-4 py-2">Situação</td>
-            <td className="px-4 py-2">{isDoctor ? "Paciente" : "Médico"}</td>
-            <td className="px-4 py-2">03/10/2023</td>
+      ) : null}
+    </div>
+    <div className="flex flex-col mx-8 border-solid">
+    <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+  <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+    <div className="overflow-hidden">
+      <table className="min-w-full text-left text-sm font-light border-2 border-blue-500 rounded-lg">
+        <thead className="border-b-2 font-medium border-blue-500">
+          <tr>
+            <th scope="col" className="px-6 py-4">Editar</th>
+            <th scope="col" className="px-6 py-4">Situação</th>
+            <th scope="col" className="px-6 py-4">Paciente</th>
+            <th scope="col" className="px-6 py-4">Data</th>
           </tr>
         </thead>
         <tbody>
-        <tr className="bg-blue-500 text-white">
-            <th className="px-4 py-2">X</th>
-            <th className="px-4 py-2">A realizar</th>
-            <th className="px-4 py-2">Zacarias Peixoto</th>
-            <th className="px-4 py-2">30/10/2023</th>
+          <tr>
+            <td className="whitespace-nowrap px-6 py-4 font-medium border-r-2 border-b-2 border-blue-500">1</td>
+            <td className="whitespace-nowrap px-6 py-4 border-r-2 border-b-2 border-blue-500">A realizar</td>
+            <td className="whitespace-nowrap px-6 py-4 border-r-2 border-b-2 border-blue-500">Zacarias Peixoto</td>
+            <td className="whitespace-nowrap px-6 py-4 border-b-2 border-blue-500">30/10/2023</td>
           </tr>
           <tr>
-            <td className="px-4 py-2">?</td>
-            <td className="px-4 py-2">Em análise</td>
-            <td className="px-4 py-2">Zeca Tatu da Silva</td>
-            <td className="px-4 py-2">22/07/2023</td>
+            <td className="whitespace-nowrap px-6 py-4 font-medium border-r-2 border-b-2 border-blue-500">2</td>
+            <td className="whitespace-nowrap px-6 py-4 border-r-2 border-b-2 border-blue-500">Em análise</td>
+            <td className="whitespace-nowrap px-6 py-4 border-r-2 border-b-2 border-blue-500">Zeca Tatu da Silva</td>
+            <td className="whitespace-nowrap px-6 py-4 border-b-2 border-blue-500">22/07/2023</td>
           </tr>
-          
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+
+</div>
+
     </div>
   );
 }
