@@ -139,7 +139,6 @@ export const Table = ({ text, isDoctor, consultas }: TableProps) => {
                             onClick={() =>
                               handleMakeAppointment({
                                 id: consulta.id,
-                                cpfPaciente: consulta.paciente?.cpf,
                               })
                             }
                           >
