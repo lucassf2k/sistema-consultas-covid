@@ -18,7 +18,7 @@ export function Header({ imageURL, name }: HeaderProps) {
         <User.Infos name={name} />
       </User.Root>
       <div className="w-[180px] flex items-center justify-evenly text-xl text-blue-400 font-bold">
-        <Link to="">Perfil</Link>
+        <Link to="/profile">Perfil</Link>
         <button
           type="button"
           onClick={handleLogout}

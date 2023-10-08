@@ -5,6 +5,7 @@ import { Patient } from '../../pages/patient'
 import { Doctor } from '../../pages/doctor'
 import { AuthProvider } from '../../contexts/auth-context'
 import { PrivateRoute } from './private-route'
+import { DadosMedico } from '../../pages/profile'
 
 export function Router() {
   return (
@@ -26,6 +27,14 @@ export function Router() {
             element={
               <PrivateRoute>
                 <Doctor />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <DadosMedico />
               </PrivateRoute>
             }
           />
