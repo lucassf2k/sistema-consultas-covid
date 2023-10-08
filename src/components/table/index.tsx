@@ -74,7 +74,10 @@ export const Table = ({ text, isDoctor, consultas }: TableProps) => {
                 <tbody>
                   {consultasFilteredByDoctor &&
                     consultasFilteredByDoctor.map((consulta) => (
-                      <tr key={consulta.id}>
+                      <tr
+                        key={consulta.id}
+                        className={`${consulta.paciente && 'bg-green-300'}`}
+                      >
                         <td className="whitespace-nowrap px-6 py-4 font-medium border-r-2 border-b-2 border-blue-500">
                           {consulta.local}
                         </td>
