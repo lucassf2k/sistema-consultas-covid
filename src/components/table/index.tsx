@@ -1,4 +1,6 @@
+import { toast } from 'react-toastify'
 import { Consultas } from '../../models/consultas'
+import { api } from '../../services/api'
 import { transformarFormatoDataHora } from '../../services/formated-date-hours'
 import { ModalRegisterConsulta } from '../modal-register-cosulta'
 import { Title } from '../title'
@@ -10,9 +12,23 @@ type TableProps = {
 }
 
 export const Table = ({ text, isDoctor, consultas }: TableProps) => {
-  const email = localStorage.getItem('@email')
-  const consultasFilteredByDoctor =
-    consultas && consultas.filter((consulta) => consulta.medico.email === email)
+  let consultasFilteredByDoctor
+  if (isDoctor) {
+    const email = localStorage.getItem('@email')
+    consultasFilteredByDoctor =
+      consultas &&
+      consultas.filter((consulta) => consulta.medico.email === email)
+  }
+
+  const handleMakeAppointment = async ({ id }: { id: number }) => {
+    try {
+      const cpfPaciente = prompt('Seu CPF: ')
+      await api.patch('/consulta', { id, cpfPaciente })
+      toast.success('Consulta marcada com sucesso!')
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   return (
     <div className="">
@@ -61,10 +77,10 @@ export const Table = ({ text, isDoctor, consultas }: TableProps) => {
                       Local
                     </th>
                     <th scope="col" className="px-6 py-4">
-                      Paciente
+                      {!isDoctor ? 'Médico' : 'Paciente'}
                     </th>
                     <th scope="col" className="px-6 py-4">
-                      E-mail paciente
+                      {!isDoctor ? 'E-mail do médico' : 'E-mail do paciente'}
                     </th>
                     <th scope="col" className="px-6 py-4">
                       Data
@@ -72,7 +88,8 @@ export const Table = ({ text, isDoctor, consultas }: TableProps) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {consultasFilteredByDoctor &&
+                  {isDoctor &&
+                    consultasFilteredByDoctor &&
                     consultasFilteredByDoctor.map((consulta) => (
                       <tr
                         key={consulta.id}
@@ -93,6 +110,41 @@ export const Table = ({ text, isDoctor, consultas }: TableProps) => {
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 border-b-2 border-blue-500">
                           {transformarFormatoDataHora(consulta.dataHorario)}
+                        </td>
+                      </tr>
+                    ))}
+                  {!isDoctor &&
+                    consultas &&
+                    consultas.map((consulta) => (
+                      <tr
+                        key={consulta.id}
+                        className={`${consulta.paciente && 'bg-green-300'}`}
+                      >
+                        <td className="whitespace-nowrap px-6 py-4 font-medium border-r-2 border-b-2 border-blue-500">
+                          {consulta.local}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 border-r-2 border-b-2 border-blue-500">
+                          {consulta.medico.nome}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 border-r-2 border-b-2 border-blue-500">
+                          {consulta.medico.email}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 border-b-2 border-blue-500">
+                          {transformarFormatoDataHora(consulta.dataHorario)}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 border-b-2 border-blue-500">
+                          <button
+                            className="disabled:opacity-30"
+                            disabled={Boolean(consulta.paciente)}
+                            onClick={() =>
+                              handleMakeAppointment({
+                                id: consulta.id,
+                                cpfPaciente: consulta.paciente?.cpf,
+                              })
+                            }
+                          >
+                            Marcar
+                          </button>
                         </td>
                       </tr>
                     ))}
