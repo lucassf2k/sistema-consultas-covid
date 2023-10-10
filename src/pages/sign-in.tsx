@@ -45,7 +45,7 @@ export function SingIn() {
               }
             />
             <span className="w-full text-sm mb-2">
-              Esqueceu sua senha?{' '}
+              Não possui conta ainda?{' '}
               <Link to="/sign-up" className="text-blue-400">
                 clique aqui
               </Link>

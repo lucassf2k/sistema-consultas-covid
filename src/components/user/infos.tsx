@@ -3,5 +3,5 @@ type InfosProps = {
 }
 
 export function Infos({ name }: InfosProps) {
-  return <p className="text-xl text-blue-400 font-bold">Bem vindo, {name}</p>
+  return <p className="text-xl text-white font-bold">Bem vindo, {name}</p>
 }

@@ -2,22 +2,32 @@ import { toast } from 'react-toastify'
 import { Consultas } from '../../models/consultas'
 import { api } from '../../services/api'
 import { transformarFormatoDataHora } from '../../services/formated-date-hours'
-import { ModalRegisterConsulta } from '../modal-register-cosulta'
-import { Title } from '../title'
+import { useEffect, useState } from 'react'
 
 type TableProps = {
   text: string
   isDoctor: boolean
+  isProfile?: boolean
   consultas?: Consultas[]
 }
 
-export const Table = ({ text, isDoctor, consultas }: TableProps) => {
+export const Table = ({ text, isDoctor, isProfile=false, consultas }: TableProps) => {
   let consultasFilteredByDoctor
+  let consultasFilteredByPatient
+
   if (isDoctor) {
     const email = localStorage.getItem('@email')
     consultasFilteredByDoctor =
       consultas &&
       consultas.filter((consulta) => consulta.medico.email === email)
+  }
+  else if(!isDoctor && !isProfile){
+    consultasFilteredByPatient = 
+      consultas &&
+      consultas.filter((consulta) => consulta.paciente === null)
+  }
+  else if(!isDoctor && isProfile){
+    consultasFilteredByPatient = consultas
   }
 
   const handleMakeAppointment = async ({ id }: { id: number }) => {
@@ -30,11 +40,29 @@ export const Table = ({ text, isDoctor, consultas }: TableProps) => {
     }
   }
 
+  const handleCancelAppointment = async ({ id }: {id: number}) => {
+    try{
+      await api.delete(`/consulta/${id}`)
+      toast.success('Consulta cancelada com sucesso!')
+    } catch(err){
+      console.log(err)
+    }
+  }
+
+  const [concluded, setConcluded] = useState(false)
+  const handleConcluded = () => {
+    setConcluded(true)
+    localStorage.setItem("@concluded", "true") 
+    toast.success('Consulta concluída com sucesso!')
+  }
+
+  useEffect(() => {
+    setConcluded(Boolean(localStorage.getItem('@concluded')))
+  }, [])
+
   return (
     <div className="">
-      {isDoctor && <Title text="Cadastrar nova consulta" />}
-      {isDoctor && <ModalRegisterConsulta isOpen />}
-      <div className="flex my-8 items-center">
+      <div className="flex my-8 items-center text-center">
         {text && (
           <div
             className="text-container m-auto"
@@ -93,7 +121,7 @@ export const Table = ({ text, isDoctor, consultas }: TableProps) => {
                     consultasFilteredByDoctor.map((consulta) => (
                       <tr
                         key={consulta.id}
-                        className={`${consulta.paciente && 'bg-green-300'}`}
+                        className={`${(consulta.paciente ? (concluded ? 'bg-green-300' : 'bg-blue-300') : '')}`}
                       >
                         <td className="whitespace-nowrap px-6 py-4 font-medium border-r-2 border-b-2 border-blue-500">
                           {consulta.local}
@@ -108,17 +136,26 @@ export const Table = ({ text, isDoctor, consultas }: TableProps) => {
                             ? consulta.paciente.email
                             : 'Sem paciente'}
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4 border-b-2 border-blue-500">
+                        <td className="whitespace-nowrap px-6 py-4 border-r-2 border-b-2 border-blue-500">
                           {transformarFormatoDataHora(consulta.dataHorario)}
+                        </td>
+                        <td className='whitespace-nowrap px-6 py-4 border-r-2 border-b-2 border-blue-500'>
+                          <button
+                            className='disable:opacity-30'
+                            disabled={!Boolean(consulta.paciente)}
+                            onClick={() => {handleConcluded()}}
+                          >
+                            Concluida
+                          </button>
                         </td>
                       </tr>
                     ))}
                   {!isDoctor &&
-                    consultas &&
-                    consultas.map((consulta) => (
+                    consultasFilteredByPatient &&
+                    consultasFilteredByPatient.map((consulta) => (
                       <tr
                         key={consulta.id}
-                        className={`${consulta.paciente && 'bg-green-300'}`}
+                        className={`${consulta.paciente && 'bg-blue-300'}`}
                       >
                         <td className="whitespace-nowrap px-6 py-4 font-medium border-r-2 border-b-2 border-blue-500">
                           {consulta.local}
@@ -129,10 +166,10 @@ export const Table = ({ text, isDoctor, consultas }: TableProps) => {
                         <td className="whitespace-nowrap px-6 py-4 border-r-2 border-b-2 border-blue-500">
                           {consulta.medico.email}
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4 border-b-2 border-blue-500">
+                        <td className="whitespace-nowrap px-6 py-4 border-r-2 border-b-2 border-blue-500">
                           {transformarFormatoDataHora(consulta.dataHorario)}
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4 border-b-2 border-blue-500">
+                        <td className="whitespace-nowrap px-6 py-4 border-r-2 border-b-2 border-blue-500">
                           <button
                             className="disabled:opacity-30"
                             disabled={Boolean(consulta.paciente)}
@@ -145,6 +182,17 @@ export const Table = ({ text, isDoctor, consultas }: TableProps) => {
                             Marcar
                           </button>
                         </td>
+                        <td className="whitespace-nowrap px-6 py-4 border-b-2 border-blue-500">
+                          <button
+                            onClick={() =>
+                              handleCancelAppointment({
+                                id: consulta.id,
+                              })
+                            }
+                          >
+                            Cancelar
+                          </button>
+                        </td>
                       </tr>
                     ))}
                 </tbody>
@@ -154,6 +202,7 @@ export const Table = ({ text, isDoctor, consultas }: TableProps) => {
         </div>
       </div>
     </div>
+    
   )
 }
 

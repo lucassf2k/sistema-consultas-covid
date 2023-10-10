@@ -9,7 +9,7 @@ export function Image({ height, width, src }: UserImageProps) {
     <img
       src={src}
       alt="Homem lindo"
-      className={`${width} ${height} rounded-full border-2 border-blue-400`}
+      className={`${width} ${height} rounded-full border-2 border-white`}
     />
   )
 }
